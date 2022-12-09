@@ -37,7 +37,7 @@ int main(int argc, char ** argv){
                 fprintf(file, "#include <stdio.h>\n");
                 fprintf(file, "#include <stdlib.h>\n\n");
                 fprintf(file, "int main(int argc, char ** argv){\n\n");
-                fprintf(file, "    return EXIT_SUCCESS;");
+                fprintf(file, "    return EXIT_SUCCESS;\n");
                 fprintf(file, "}");
                 fclose(file);
             }
@@ -64,7 +64,7 @@ int main(int argc, char ** argv){
                 fprintf(file, "#include <cstdio>\n");
                 fprintf(file, "#include <cstdlib>\n\n");
                 fprintf(file, "int main(int argc, char ** argv){\n\n");
-                fprintf(file, "    return EXIT_SUCCESS;");
+                fprintf(file, "    return EXIT_SUCCESS;\n");
                 fprintf(file, "}");
                 
                 fclose(file);
