@@ -14,6 +14,7 @@ void displayHelp(void){
     puts("Usage: create [project-type] [project-name]\n");
     puts(" Types:");
     puts("  cproject          Creates a C language Project");
+    puts("  cplusproject      Creates a C Plus Plus Project");
     puts("  csproject         Creates a C-Sharp Project");
     puts("  pyproject         Creates a Python Project\n\n");
     return;
@@ -54,6 +55,20 @@ int main(int argc, char ** argv){
                 fclose(file);
             }
         }
+        else if (!strcmp(argv[1], "cplusproject") && argc > 2){
+            strcpy(filename, argv[2]);
+            addExtension(filename, ".cpp");
+            result = fopen_s(&file, filename, "wt");
+            if (!result){
+                fprintf(file, "#include <cstdio>\n");
+                fprintf(file, "#include <cstdlib>\n\n");
+                fprintf(file, "int main(int argc, char ** argv){\n\n");
+                fprintf(file, "    return EXIT_SUCCESS;");
+                fprintf(file, "}");
+                
+                fclose(file);
+            }
+        }
         else if (!strcmp(argv[1], "csproject") && argc > 2){
             char folderCMD[FILENAME_MAX] = "mkdir ";
             char makecmd[FILENAME_MAX] = "dotnet new console -o ";
@@ -65,7 +80,7 @@ int main(int argc, char ** argv){
         else if (!strcmp(argv[1], "/?")){
             displayHelp();
         }
-        else if (argc == 2 && (!strcmp(argv[1], "csproject") || !strcmp(argv[1], "pyproject") || !strcmp(argv[1], "cproject"))){
+        else if (argc == 2 && (!strcmp(argv[1], "csproject") || !strcmp(argv[1], "pyproject") || !strcmp(argv[1], "cproject") || !strcmp(argv[1], "cplusproject"))){
             displayHelp();
 
         }
