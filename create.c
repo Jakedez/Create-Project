@@ -16,7 +16,8 @@ void displayHelp(void){
     puts("  cproject          Creates a C language Project");
     puts("  cplusproject      Creates a C Plus Plus Project");
     puts("  csproject         Creates a C-Sharp Project");
-    puts("  pyproject         Creates a Python Project\n\n");
+    puts("  pyproject         Creates a Python Project");
+    puts("  plproject         Creates a Perl Project\n\n");
     return;
 }
 
@@ -69,6 +70,20 @@ int main(int argc, char ** argv){
                 fclose(file);
             }
         }
+        else if (!strcmp(argv[1], "plproject") && argc > 2){
+            strcpy(filename, argv[2]);
+            addExtension(filename, ".pl");
+            result = fopen_s(&file, filename, "wt");
+            if (!result){
+                fprintf(file, "sub main{\n");
+                fprintf(file, "    \n");
+                fprintf(file, "    return;\n");
+                fprintf(file, "}\n\n");
+                fprintf(file, "main();");
+                
+                fclose(file);
+            }
+        }
         else if (!strcmp(argv[1], "csproject") && argc > 2){
             char folderCMD[FILENAME_MAX] = "mkdir ";
             char makecmd[FILENAME_MAX] = "dotnet new console -o ";
@@ -80,7 +95,7 @@ int main(int argc, char ** argv){
         else if (!strcmp(argv[1], "/?")){
             displayHelp();
         }
-        else if (argc == 2 && (!strcmp(argv[1], "csproject") || !strcmp(argv[1], "pyproject") || !strcmp(argv[1], "cproject") || !strcmp(argv[1], "cplusproject"))){
+        else if (argc == 2 && (!strcmp(argv[1], "csproject") || !strcmp(argv[1], "pyproject") || !strcmp(argv[1], "cproject") || !strcmp(argv[1], "cplusproject")  || !strcmp(argv[1], "plproject"))){
             displayHelp();
 
         }
