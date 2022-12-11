@@ -1,11 +1,44 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
+
+const char * C_LANGUAGE = "cproject";
+const char * C_PLUS_PLUS = "cplusproject";
+const char * C_SHARP = "csproject";
+const char * PYTHON = "pyproject";
+const char * PERL = "plproject";
+
+bool hasSpaces(char * string){
+    int length = strlen(string);
+    for (int i = 0; i < length; i++){
+        if (string[i] == 32){
+            return true;
+        }
+    }
+    return false;
+}
 
 void addExtension(char * filename, char * extension){
     if (strcmp(&filename[strlen(filename)-strlen(extension)], extension)){
         strcat(filename, extension);
     }
+    return;
+}
+
+
+
+void switchSpaces(char * target, char * destination){
+    int length = strlen(target);
+    for (int i = 0; i < length; i++){
+        if (target[i] != 32){ // if target character is not [space]
+            destination[i] = target[i];
+        }
+        else{
+            destination[i] = 95; //switches spaces with underscores '_'
+        }
+    }
+    destination[length] = 0;
     return;
 }
 
@@ -22,6 +55,7 @@ void displayHelp(void){
 }
 
 int main(int argc, char ** argv){
+
     if (argc < 2){
         displayHelp();
     }
@@ -29,7 +63,7 @@ int main(int argc, char ** argv){
         FILE * file;
         errno_t result;
         char filename[FILENAME_MAX];
-        if (!strcmp(argv[1], "cproject") && argc > 2){
+        if (!strcmp(argv[1], C_LANGUAGE) && argc > 2){
             strcpy(filename, argv[2]);
             addExtension(filename, ".c");
             result = fopen_s(&file, filename, "wt");
@@ -42,7 +76,7 @@ int main(int argc, char ** argv){
                 fclose(file);
             }
         }
-        else if (!strcmp(argv[1], "pyproject") && argc > 2){
+        else if (!strcmp(argv[1], PYTHON) && argc > 2){
             strcpy(filename, argv[2]);
             addExtension(filename, ".py");
             result = fopen_s(&file, filename, "wt");
@@ -56,7 +90,7 @@ int main(int argc, char ** argv){
                 fclose(file);
             }
         }
-        else if (!strcmp(argv[1], "cplusproject") && argc > 2){
+        else if (!strcmp(argv[1], C_PLUS_PLUS) && argc > 2){
             strcpy(filename, argv[2]);
             addExtension(filename, ".cpp");
             result = fopen_s(&file, filename, "wt");
@@ -70,7 +104,7 @@ int main(int argc, char ** argv){
                 fclose(file);
             }
         }
-        else if (!strcmp(argv[1], "plproject") && argc > 2){
+        else if (!strcmp(argv[1], PERL) && argc > 2){
             strcpy(filename, argv[2]);
             addExtension(filename, ".pl");
             result = fopen_s(&file, filename, "wt");
@@ -84,18 +118,47 @@ int main(int argc, char ** argv){
                 fclose(file);
             }
         }
-        else if (!strcmp(argv[1], "csproject") && argc > 2){
+        else if (!strcmp(argv[1], C_SHARP) && argc > 2){
             char folderCMD[FILENAME_MAX] = "mkdir ";
             char makecmd[FILENAME_MAX] = "dotnet new console -o ";
-            strcat(folderCMD, argv[2]);
-            strcat(makecmd, argv[2]);
+            char programName[FILENAME_MAX];
+            if (hasSpaces(argv[2])){
+                char temp[FILENAME_MAX] = "\"";
+                strcat(temp, argv[2]);
+                strcat(temp, "\"");
+                strcat(folderCMD, temp);
+                strcat(makecmd, temp);
+            }
+            else{
+                strcat(folderCMD, argv[2]);
+                strcat(makecmd, argv[2]);
+            }
             system(folderCMD);
             system(makecmd);
+            strcat(programName, argv[2]);
+            strcat(programName, "/");
+            strcat(programName, "Program.cs");
+            char namespace[FILENAME_MAX];
+            switchSpaces(argv[2], namespace);
+            result = fopen_s(&file, programName, "wt");
+            if (!result){
+                fprintf(file, "using System;\n");
+                fprintf(file, "using System.Collections.Generic;\n\n\n");
+                fprintf(file, "namespace %s{\n", namespace);
+                fprintf(file, "    public class Program{\n");
+                fprintf(file, "        public static void Main(string[] argv){\n");
+                fprintf(file, "            \n");
+                fprintf(file, "            return;\n");
+                fprintf(file, "        }\n");
+                fprintf(file, "    }\n");
+                fprintf(file, "}\n");
+                fclose(file);
+            }
         }
         else if (!strcmp(argv[1], "/?")){
             displayHelp();
         }
-        else if (argc == 2 && (!strcmp(argv[1], "csproject") || !strcmp(argv[1], "pyproject") || !strcmp(argv[1], "cproject") || !strcmp(argv[1], "cplusproject")  || !strcmp(argv[1], "plproject"))){
+        else if (argc == 2 && (!strcmp(argv[1], C_SHARP) || !strcmp(argv[1], PYTHON) || !strcmp(argv[1], C_LANGUAGE) || !strcmp(argv[1], C_PLUS_PLUS)  || !strcmp(argv[1], PERL))){
             displayHelp();
 
         }
