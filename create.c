@@ -2,12 +2,14 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <sys/stat.h>
 
 const char * C_LANGUAGE = "cproject";
 const char * C_PLUS_PLUS = "cplusproject";
 const char * C_SHARP = "csproject";
 const char * PYTHON = "pyproject";
 const char * PERL = "plproject";
+const char * RAYLIB = "rlproject";
 
 bool hasSpaces(char * string){
     int length = strlen(string);
@@ -48,9 +50,10 @@ void displayHelp(void){
     puts(" Types:");
     puts("  cproject          Creates a C language Project");
     puts("  cplusproject      Creates a C Plus Plus Project");
-    puts("  csproject         Creates a C-Sharp Project");
+    puts("  csproject         Creates a C-Sharp Project using .NET framework");
     puts("  pyproject         Creates a Python Project");
-    puts("  plproject         Creates a Perl Project\n\n");
+    puts("  plproject         Creates a Perl Project");
+    puts("  rlproject         Creates a Raylib Project in C for a VSCode Workspace\n\n");
     return;
 }
 
@@ -155,10 +158,33 @@ int main(int argc, char ** argv){
                 fclose(file);
             }
         }
+        else if (!strcmp(argv[1], RAYLIB) && argc > 2){
+            struct stat sb;
+            if (stat("C:\\raylib\\raylib\\projects\\VSCode", &sb) == 0 && S_ISDIR(sb.st_mode)){
+                strcpy(filename, argv[2]);
+                if (hasSpaces(argv[2])){
+                    strcpy(filename, "\"");
+                    strcat(filename, argv[2]);
+                    strcat(filename, "\"");
+                }
+                else{
+                    strcpy(filename, argv[2]);
+                }
+                char folderCMD[FILENAME_MAX] = "mkdir ";
+                char makecmd[FILENAME_MAX] = "xcopy /E C:\\raylib\\raylib\\projects\\VSCode ";
+                strcat(folderCMD, filename);
+                strcat(makecmd, filename);
+                system(folderCMD);
+                system(makecmd);
+            }
+            else{
+                puts("Raylib is either not installed, or is not installed at the expected directory");
+            }
+        }
         else if (!strcmp(argv[1], "/?")){
             displayHelp();
         }
-        else if (argc == 2 && (!strcmp(argv[1], C_SHARP) || !strcmp(argv[1], PYTHON) || !strcmp(argv[1], C_LANGUAGE) || !strcmp(argv[1], C_PLUS_PLUS)  || !strcmp(argv[1], PERL))){
+        else if (argc == 2 && (!strcmp(argv[1], C_SHARP) || !strcmp(argv[1], PYTHON) || !strcmp(argv[1], C_LANGUAGE) || !strcmp(argv[1], C_PLUS_PLUS)  || !strcmp(argv[1], PERL) || !strcmp(argv[1], RAYLIB))){
             displayHelp();
 
         }
