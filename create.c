@@ -10,6 +10,7 @@ const char * C_SHARP = "csproject";
 const char * PYTHON = "pyproject";
 const char * PERL = "plproject";
 const char * RAYLIB = "rlproject";
+const char * ASM = "asm";
 
 bool hasSpaces(char * string){
     int length = strlen(string);
@@ -54,6 +55,7 @@ void displayHelp(void){
     puts("  pyproject         Creates a Python Project");
     puts("  plproject         Creates a Perl Project");
     puts("  rlproject         Creates a Raylib Project in C for a VSCode Workspace\n\n");
+    puts("  asm               Creates an assembly template with at&t syntax");
     return;
 }
 
@@ -216,7 +218,38 @@ int main(int argc, char ** argv){
         else if (!strcmp(argv[1], "/?")){
             displayHelp();
         }
-        else if (argc == 2 && (!strcmp(argv[1], C_SHARP) || !strcmp(argv[1], PYTHON) || !strcmp(argv[1], C_LANGUAGE) || !strcmp(argv[1], C_PLUS_PLUS)  || !strcmp(argv[1], PERL) || !strcmp(argv[1], RAYLIB))){
+        else if (!strcmp(argv[1], ASM) && argc > 2){
+            strcpy(filename, argv[2]);
+            addExtension(filename, ".s");
+        #ifdef _WIN64
+            result = fopen_s(&file, filename, "wt");
+            if (!result){
+        #endif
+        #ifdef __linux__
+            file = fopen(filename, "wt");
+            if (file){
+        #endif
+                fprintf(file, ".section .data\n\n\n\n");
+                fprintf(file, ".section .text\n\n");
+                fprintf(file, ".globl main\n\n");
+                fprintf(file, "main:\n");
+                fprintf(file, "pushq %%rbp\n");
+                fprintf(file, "movq %%rsp, %%rbp\n\n\n\n");
+                
+                
+        #ifdef _WIN64
+                fprintf(file, "popq %%rbp\n");
+        #endif
+        #ifdef __linux__
+                fprintf(file, "leave\n");
+        #endif
+                fprintf(file, "retq\n");
+                fprintf(file, "\n");
+                
+                fclose(file);
+            }
+        }
+        else if (argc == 2 && (!strcmp(argv[1], C_SHARP) || !strcmp(argv[1], PYTHON) || !strcmp(argv[1], C_LANGUAGE) || !strcmp(argv[1], C_PLUS_PLUS)  || !strcmp(argv[1], PERL) || !strcmp(argv[1], RAYLIB) || !strcmp(argv[1], ASM))){
             displayHelp();
 
         }
