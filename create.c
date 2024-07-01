@@ -54,8 +54,9 @@ void displayHelp(void){
     puts("  csproject         Creates a C-Sharp Project using .NET framework");
     puts("  pyproject         Creates a Python Project");
     puts("  plproject         Creates a Perl Project");
-    puts("  rlproject         Creates a Raylib Project in C for a VSCode Workspace\n\n");
+    puts("  rlproject         Creates a Raylib Project in C for a VSCode Workspace");
     puts("  asm               Creates an assembly template with at&t syntax");
+    puts("\n\n");
     return;
 }
 
