@@ -64,13 +64,21 @@ int main(int argc, char ** argv){
     }
     else{
         FILE * file;
+        #ifdef _WIN64
         errno_t result;
+        #endif
         char filename[FILENAME_MAX];
         if (!strcmp(argv[1], C_LANGUAGE) && argc > 2){
             strcpy(filename, argv[2]);
             addExtension(filename, ".c");
+        #ifdef _WIN64
             result = fopen_s(&file, filename, "wt");
             if (!result){
+        #endif
+        #ifdef __linux__
+            file = fopen(filename, "wt");
+            if (file){
+        #endif
                 fprintf(file, "#include <stdio.h>\n");
                 fprintf(file, "#include <stdlib.h>\n\n");
                 fprintf(file, "int main(int argc, char ** argv){\n\n");
@@ -82,8 +90,14 @@ int main(int argc, char ** argv){
         else if (!strcmp(argv[1], PYTHON) && argc > 2){
             strcpy(filename, argv[2]);
             addExtension(filename, ".py");
+        #ifdef _WIN64
             result = fopen_s(&file, filename, "wt");
             if (!result){
+        #endif
+        #ifdef __linux__
+            file = fopen(filename, "wt");
+            if (file){
+        #endif
                 fprintf(file, "def main():\n");
                 fprintf(file, "    \n");
                 fprintf(file, "    return\n\n\n");
@@ -96,8 +110,14 @@ int main(int argc, char ** argv){
         else if (!strcmp(argv[1], C_PLUS_PLUS) && argc > 2){
             strcpy(filename, argv[2]);
             addExtension(filename, ".cpp");
+        #ifdef _WIN64
             result = fopen_s(&file, filename, "wt");
             if (!result){
+        #endif
+        #ifdef __linux__
+            file = fopen(filename, "wt");
+            if (file){
+        #endif
                 fprintf(file, "#include <cstdio>\n");
                 fprintf(file, "#include <cstdlib>\n\n");
                 fprintf(file, "int main(int argc, char ** argv){\n\n");
@@ -110,8 +130,14 @@ int main(int argc, char ** argv){
         else if (!strcmp(argv[1], PERL) && argc > 2){
             strcpy(filename, argv[2]);
             addExtension(filename, ".pl");
+        #ifdef _WIN64
             result = fopen_s(&file, filename, "wt");
             if (!result){
+        #endif
+        #ifdef __linux__
+            file = fopen(filename, "wt");
+            if (file){
+        #endif
                 fprintf(file, "sub main{\n");
                 fprintf(file, "    \n");
                 fprintf(file, "    return;\n");
@@ -143,8 +169,14 @@ int main(int argc, char ** argv){
             strcat(programName, "Program.cs");
             char namespace[FILENAME_MAX];
             switchSpaces(argv[2], namespace);
-            result = fopen_s(&file, programName, "wt");
+        #ifdef _WIN64
+            result = fopen_s(&file, filename, "wt");
             if (!result){
+        #endif
+        #ifdef __linux__
+            file = fopen(filename, "wt");
+            if (file){
+        #endif
                 fprintf(file, "using System;\n");
                 fprintf(file, "using System.Collections.Generic;\n\n\n");
                 fprintf(file, "namespace %s{\n", namespace);
@@ -191,8 +223,14 @@ int main(int argc, char ** argv){
         else{
             strcpy(filename, argv[1]);
             addExtension(filename, ".c");
+        #ifdef _WIN64
             result = fopen_s(&file, filename, "wt");
             if (!result){
+        #endif
+        #ifdef __linux__
+            file = fopen(filename, "wt");
+            if (file){
+        #endif
                 fprintf(file, "#include <stdio.h>\n");
                 fprintf(file, "#include <stdlib.h>\n\n");
                 fprintf(file, "int main(int argc, char ** argv){\n\n");
